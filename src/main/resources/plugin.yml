@@ -1,0 +1,89 @@
+name: Homgund
+version: '2.7.6'
+main: me.vovanov.homgund.Homgund
+api-version: '1.21'
+authors: [vovanov]
+description: Крутой плагин :))
+depend: []
+permissions:
+  economy.worker:
+    description: Позволяет использовать команду /bank
+    default: op
+  economy.atm:
+    description: Позволяет использовать команду /atm
+    default: op
+  homgund.hgreload:
+    description: Позволяет использовать команду /hgreload
+    default: op
+  homgund.denysit:
+    default: true
+  homgund.allowsit:
+    default: true
+  homgund.ignore:
+    default: true
+  homgund.unignore:
+    default: true
+  homgund.teleport:
+    default: op
+  homgund.hat:
+    degault: op
+commands:
+  pm:
+    description: Дубликат команды /msg и её элиасов
+    usage: "§cИспользование: /pm <игрок> <сообщение>"
+    aliases: [msg, w, tell]
+  try:
+    description: Команда /me с сообщением об упспешности или провала действия
+    usage: "§cИспользование: /try <текст>"
+  mee:
+    description: Дубликат команды /me
+    usage: "§cИспользование: /me <текст>"
+    aliases: [me]
+  do:
+    description: Команда /me без ника в сообщении
+    usage: "§cИспользование: /do <действие>"
+  balance:
+    description: Показывает текущий баланс на карте
+    aliases: [bal, b]
+  withdraw:
+    description: Выводит средства со счёта
+    aliases: wd
+  put:
+    description: Кладёт средства на счёт
+  pay:
+    description: Отправляет средства другому игроку
+    usage: "§cИспользование: /pay <игрок> <количество>"
+  bank:
+    description: Основная команда для предоставления банковских услуг
+    permission: economy.worker
+  atm:
+    description: Основная команда для управления банкоматами
+    permission: economy.atm
+  hgreload:
+    description: Перезагружает конфигурационный файл
+    permission: homgund.hgreload
+  sign:
+    description: Позволяет подписать предмет в руках
+    permission: homgund.sign
+    usage: "§cИспользование: /sign [текст]"
+  tp:
+    description: Телепортация
+    permission: homgund.teleport
+    usage: "§cИспользование: /tp <игрок> или <x> <y> <z>"
+  denysit:
+    description: Позволяет подписать предмет в руках
+    permission: homgund.denysit
+  allowsit:
+    description: Позволяет подписать предмет в руках
+    permission: homgund.allowsit
+  hat:
+    description: Позволяет надеть на голову предмет в руке
+    permission: homgund.hat
+  ignore:
+    description: Позволяет не видеть сообщения другого игрока
+    permission: homgund.ignore
+    usage: "§cИспользование: /ignore <ник>"
+  unignore:
+    description: Позволяет снова видеть сообщения игрока которого вы игнорировали
+    permission: homgund.unignore
+    usage: "§cИспользование: /unignore <ник>"

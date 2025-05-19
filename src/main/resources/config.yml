@@ -1,0 +1,12 @@
+bot-token:
+channel-id:
+
+currency: deepslate_diamond_ore
+currency-alias: АР
+atm-block: lodestone
+atm-radius: 4
+
+enable-end: false
+enable-nether: true
+
+near-radius: 65.0
