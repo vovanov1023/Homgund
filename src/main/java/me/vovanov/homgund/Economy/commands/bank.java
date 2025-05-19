@@ -9,6 +9,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 
@@ -23,7 +24,7 @@ import static org.bukkit.util.NumberConversions.ceil;
 public class bank implements CommandExecutor {
 
     @Override
-    public boolean onCommand(CommandSender sender, Command command, String s, String[] args) {
+    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String s, String[] args) {
         String[] subcom = {"help", "create", "credit", "credits", "paycredit", "debtors"};
         if (args.length == 0 || args[0].equalsIgnoreCase("help") || !(Arrays.asList(subcom).contains(args[0]))){
             sender.sendMessage(text().append(

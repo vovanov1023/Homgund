@@ -7,6 +7,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
 import static me.vovanov.homgund.Economy.files.general.*;
 import static net.kyori.adventure.text.Component.text;
@@ -14,7 +15,7 @@ import static net.kyori.adventure.text.format.NamedTextColor.*;
 
 public class put implements CommandExecutor {
     @Override
-    public boolean onCommand(CommandSender sender, Command command, String s, String[] args) {
+    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String s, String[] args) {
         if (!(sender instanceof Player player)) {
             sender.sendMessage(text("Эта команда может быть использована только игроками!", RED));
             return true;

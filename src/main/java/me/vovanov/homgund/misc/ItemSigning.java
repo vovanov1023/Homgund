@@ -34,7 +34,7 @@ public class ItemSigning implements CommandExecutor {
         ItemMeta itemMeta = itemInHand.getItemMeta();
         List<Component> lore = itemInHand.lore();
 
-        if (itemMeta.hasLore() && lore.contains(text("Подписали:"))) {
+        if (itemMeta.hasLore() && lore != null && lore.contains(text("Подписали:"))) {
             if (lore.contains(playerName)) {
                 player.sendMessage(text("Вы уже подписали этот предмет!", NamedTextColor.RED));
                 return true;

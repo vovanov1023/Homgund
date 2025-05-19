@@ -31,6 +31,7 @@ public class playerDisguise {
         ItemStack helmet = player.getInventory().getHelmet();
         if (helmet != null && helmet.hasItemMeta() && helmet.getItemMeta().hasDisplayName() && helmet.getType() == Material.CARVED_PUMPKIN) {
             Component helmetName = helmet.getItemMeta().displayName();
+            if (helmetName == null) return false;
             return MASKS.contains(LegacyComponentSerializer.legacySection().serialize(helmetName).toLowerCase());
         } else
             return helmet != null && helmet.getType() == Material.CARVED_PUMPKIN;

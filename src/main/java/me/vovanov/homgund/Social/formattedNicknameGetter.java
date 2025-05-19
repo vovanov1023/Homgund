@@ -4,8 +4,12 @@ import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.event.HoverEvent;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
+import net.luckperms.api.cacheddata.CachedDataManager;
 import net.luckperms.api.cacheddata.CachedMetaData;
+import net.luckperms.api.model.user.User;
 import org.bukkit.entity.Player;
+
+import java.util.Objects;
 
 import static me.vovanov.homgund.Homgund.*;
 import static me.vovanov.homgund.Social.playerDisguise.isInMask;
@@ -13,8 +17,10 @@ import static net.kyori.adventure.text.Component.text;
 
 public class formattedNicknameGetter {
 
-    static CachedMetaData getPlayerMetaData(Player player){
-        return LuckPermsAPI.getUserManager().getUser(player.getUniqueId()).getCachedData().getMetaData();
+    static CachedMetaData getPlayerMetaData(Player player) {
+        User user = LuckPermsAPI.getUserManager().getUser(player.getUniqueId());
+        CachedDataManager cachedData = Objects.requireNonNull(user).getCachedData();
+        return cachedData.getMetaData();
     }
 
     static TextComponent getPrefix(Player player){

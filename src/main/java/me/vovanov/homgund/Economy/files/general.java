@@ -15,46 +15,30 @@ public class general {
 
     @NotNull
     public static String atBlock(){
-        try {
-            String block = PLUGIN.getConfig().getString("atm-block");
-            ItemStack hui = new ItemStack(Material.matchMaterial(block));
-            if (hui.getType().isBlock()) {
-                return block;
-            } else {
-                PLUGIN.getLogger().warning("Указан недействительный параметр в качестве банкомата");
-                return "lodestone";
-            }
-        } catch (NullPointerException | IllegalArgumentException e) {
-            PLUGIN.getLogger().warning("Указан недействительный параметр в качестве банкомата");
-            return "lodestone";
-        }
+        String item = PLUGIN.getConfig().getString("atm-block");
+        if (item == null) return "lodestone";
+        Material mat = Material.matchMaterial(item);
+        if (mat == null) return "lodestone";
+        ItemStack stack = new ItemStack(mat);
+        if (stack.getType().isBlock()) return item;
+        else return "lodestone";
     }
 
     @NotNull
     public static String curIt(){
-        try {
-            String item = PLUGIN.getConfig().getString("currency");
-            ItemStack hui = new ItemStack(Material.matchMaterial(item));
-            if (hui.getType().isItem()) {
-                return item;
-            } else {
-                PLUGIN.getLogger().warning("Указан недействительный параметр в качестве валюты");
-                return "deepslate_diamond_ore";
-            }
-        } catch (NullPointerException | IllegalArgumentException e) {
-            PLUGIN.getLogger().warning("Указан недействительный параметр в качестве валюты");
-            return "deepslate_diamond_ore";
-        }
+        String item = PLUGIN.getConfig().getString("currency");
+        if (item == null) return "deepslate_diamond_ore";
+        Material mat = Material.matchMaterial(item);
+        if (mat == null) return "deepslate_diamond_ore";
+        ItemStack stack = new ItemStack(mat);
+        if (stack.getType().isItem()) return item;
+        else return "deepslate_diamond_ore";
     }
 
     @NotNull
     public static String curAl(){
-        try {
-            return PLUGIN.getConfig().getString("currency-alias");
-        } catch (NullPointerException e) {
-            PLUGIN.getLogger().warning("Отсутствует псевдоним валюты");
-            return "АР";
-        }
+        String alias = PLUGIN.getConfig().getString("currency-alias");
+        return alias == null ? "АР" : alias;
     }
 
     public static Boolean giveAR(CommandSender sender, int quantity){
