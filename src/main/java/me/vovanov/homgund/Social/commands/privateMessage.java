@@ -5,6 +5,7 @@ import net.kyori.adventure.text.TextComponent;
 import org.bukkit.command.*;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
 
@@ -20,7 +21,7 @@ public class privateMessage implements CommandExecutor, Listener {
     final Component ARROW = text(" -> ", WHITE);
     final Component COLON = text(": ", WHITE);
     @Override
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
         Component senderName;
         if (sender instanceof Player player) senderName = getFormattedName(player, false, true);
         else senderName = text(sender.getName());
