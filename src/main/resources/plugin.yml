@@ -1,10 +1,11 @@
 name: Homgund
-version: '2.7.6'
+version: '2.7.6.1'
 main: me.vovanov.homgund.Homgund
 api-version: '1.21'
 authors: [vovanov]
 description: Крутой плагин :))
 depend: []
+softdepend: ["GSit", "LuckPerms", "SuperVanish"]
 permissions:
   economy.worker:
     description: Позволяет использовать команду /bank
