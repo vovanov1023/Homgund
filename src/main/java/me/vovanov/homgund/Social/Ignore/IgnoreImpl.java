@@ -41,12 +41,22 @@ public class IgnoreImpl {
         } catch (IOException e) {e.printStackTrace();}
     }
 
-    /**Возвращает список игроков, которых игнорирует указанный*/
+    /**
+     * Возвращает список игроков, которых игнорирует указанный
+     * @param uuid UUID игрока
+     * @return Список игроков, которых игнорирует указанный или пустой список, если таких нет
+     * @throws IllegalArgumentException если аргумент null
+     */
     public static List<String> getIgnoredPlayers(String uuid) {
         return ignoringPlayers.getStringList(uuid);
     }
 
-    /**Возвращает список игроков, которые игнорируют указанного*/
+    /**
+     * Возвращает список игроков, которые игнорируют указанного
+     * @param uuid UUID игрока
+     * @return Список игроков, которые игнорируют указанного или пустой список, если таких нет
+     * @throws IllegalArgumentException если аргумент null
+     */
     public static List<String> getIgnoringPlayers(String uuid) {
         return ignoredPlayers.getStringList(uuid);
     }
