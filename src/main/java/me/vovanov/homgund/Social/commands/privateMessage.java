@@ -48,7 +48,7 @@ public class privateMessage implements CommandExecutor, Listener {
         String recud = receiver.getUniqueId().toString();
         String senud = sender instanceof Player player ? player.getUniqueId().toString() : null;
 
-        if (!getIgnoringPlayers(senud).contains(recud)) receiver.sendMessage(toReceiver);
+        if (senud != null && !getIgnoringPlayers(senud).contains(recud)) receiver.sendMessage(toReceiver);
         sender.sendMessage(toSender);
         return true;
     }
