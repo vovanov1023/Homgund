@@ -44,7 +44,7 @@ public class IgnoreImpl {
     /**
      * Возвращает список игроков, которых игнорирует указанный
      * @param uuid UUID игрока
-     * @return Список игроков, которых игнорирует указанный или пустой список, если таких нет
+     * @return Список UUID игроков, которых игнорирует указанный или пустой список, если таких нет
      * @throws IllegalArgumentException если аргумент null
      */
     public static List<String> getIgnoredPlayers(String uuid) {
@@ -54,7 +54,7 @@ public class IgnoreImpl {
     /**
      * Возвращает список игроков, которые игнорируют указанного
      * @param uuid UUID игрока
-     * @return Список игроков, которые игнорируют указанного или пустой список, если таких нет
+     * @return Список UUID игроков, которые игнорируют указанного или пустой список, если таких нет
      * @throws IllegalArgumentException если аргумент null
      */
     public static List<String> getIgnoringPlayers(String uuid) {
