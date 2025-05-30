@@ -1,5 +1,5 @@
 name: Homgund
-version: '2.7.6.1'
+version: '2.7.6.2'
 main: me.vovanov.homgund.Homgund
 api-version: '1.21'
 authors: [vovanov]
