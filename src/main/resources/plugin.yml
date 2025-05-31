@@ -1,7 +1,7 @@
 name: Homgund
-version: '2.7.6.2'
+version: ${pluginVersion}
 main: me.vovanov.homgund.Homgund
-api-version: '1.21'
+api-version: ${minecraftVersion}
 authors: [vovanov]
 description: Крутой плагин :))
 depend: []

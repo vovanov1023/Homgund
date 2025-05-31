@@ -4,7 +4,7 @@ plugins {
 }
 
 group = 'me.vovanov'
-version = '2.7.6.2'
+version = pluginVersion
 
 repositories {
     mavenCentral()
@@ -22,12 +22,12 @@ repositories {
 }
 
 dependencies {
-    compileOnly("io.papermc.paper:paper-api:1.21-R0.1-SNAPSHOT")
-    compileOnly("net.luckperms:api:5.4")
-    compileOnly 'com.github.LeonMangler:SuperVanish:6.2.18-3'
-    compileOnly("com.github.Gecolay.GSit:core:2.2.0")
-    implementation("net.dv8tion:JDA:5.1.2") {exclude module: 'opus-java'}
-    compileOnly 'com.discordsrv:discordsrv:1.29.0'
+    compileOnly("io.papermc.paper:paper-api:$minecraftVersion-R0.1-SNAPSHOT")
+    compileOnly("net.luckperms:api:$LuckPermsApiVersion")
+    compileOnly "com.github.LeonMangler:SuperVanish:$SuperVanishApiVersion"
+    compileOnly("com.github.Gecolay.GSit:core:$GSitVersion")
+    implementation("net.dv8tion:JDA:$JDAVersion") {exclude module: 'opus-java'}
+    compileOnly "com.discordsrv:discordsrv:$DiscordSRVVersion"
 }
 
 def targetJavaVersion = 21
@@ -55,10 +55,7 @@ tasks.jar {
 }
 
 processResources {
-    def props = [version: version]
-    inputs.properties props
-    filteringCharset 'UTF-8'
     filesMatching('plugin.yml') {
-        expand props
+        expand project.properties
     }
 }
