@@ -57,7 +57,10 @@ public class UnignoreCommand implements CommandExecutor, TabCompleter {
         if (!(sender instanceof Player player)) return null;
         List<String> ignoredUUIDs = getIgnoredPlayers(player.getUniqueId().toString());
         List<String> ignoredNames = new ArrayList<>();
-        ignoredUUIDs.forEach(ignoredUUID -> ignoredNames.add(Bukkit.getOfflinePlayer(UUID.fromString(ignoredUUID)).getName()));
+        for (String ignoredUUID : ignoredUUIDs) {
+            String name = Bukkit.getOfflinePlayer(UUID.fromString(ignoredUUID)).getName();
+            if (name != null) ignoredNames.add(name);
+        }
         if (args.length == 1) {
             return ignoredNames;
         }
