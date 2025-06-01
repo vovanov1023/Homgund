@@ -2,7 +2,7 @@ package me.vovanov.homgund.Social.chatandtab;
 
 import de.myzelyam.api.vanish.VanishAPI;
 import io.papermc.paper.advancement.AdvancementDisplay;
-import me.vovanov.homgund.Economy.files.playerData;
+import me.vovanov.homgund.Economy.files.EconomyUser;
 import net.kyori.adventure.text.TextComponent;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -38,7 +38,7 @@ public class GlobalMessages implements Listener {
         hideNickname.addEntry(player.getName());
 
         String legacyName = player.getName();
-        playerData.newFile(legacyName);
+        EconomyUser.newFile(legacyName);
 
         if (IsSvEn && VanishAPI.isInvisible(player)) {
             ++vanishedPlayers;

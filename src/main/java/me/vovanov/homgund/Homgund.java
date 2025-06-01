@@ -41,7 +41,7 @@ public final class Homgund extends JavaPlugin {
         IgnoreImpl.newFile();
 
         ATMOperations.newFile();
-        playerData.newFolder();
+        EconomyUser.newFolder();
         creditsHandler.newFile();
 
         Bukkit.getScheduler().scheduleSyncRepeatingTask(this, creditsHandler::count, 1200L, 1200L);
