@@ -47,7 +47,7 @@ public class balance implements CommandExecutor {
 
             int money = Integer.parseInt(args[2]);
             user.addToBalance(money);
-            int newBal = user.getBalance()+money;
+            int newBal = user.getBalance();
             PLUGIN.getLogger().info("Баланс " + name + " пополнен на " + money+"\nТекущий баланс: "+newBal);
             return true;
         }
