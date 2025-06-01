@@ -1,6 +1,7 @@
 package me.vovanov.homgund.Social.Ignore;
 
 import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -39,6 +40,12 @@ public class IgnoreCommand implements CommandExecutor {
             player.sendMessage(text("Такого игрока не существует", RED));
             return true;
         }
+        OfflinePlayer ignoredPlayer = Bukkit.getOfflinePlayer(ignoredUUID);
+        if (!ignoredPlayer.hasPlayedBefore()) {
+            player.sendMessage(text("Этот игрок ранее не играл на сервере"));
+            return true;
+        }
+
         String ignorerUUID = player.getUniqueId().toString();
 
         List<String> list = getIgnoredPlayers(ignorerUUID);
