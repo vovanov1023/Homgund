@@ -2,7 +2,7 @@ package me.vovanov.homgund.Economy.commands;
 
 import me.vovanov.homgund.Economy.files.ATMOperations;
 import me.vovanov.homgund.discordBot;
-import me.vovanov.homgund.Economy.files.playerData;
+import me.vovanov.homgund.Economy.files.EconomyUser;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -21,8 +21,8 @@ public class put implements CommandExecutor {
             return true;
         }
         String nick = player.getName();
-        playerData.setup(nick);
-        if (!(playerData.get().getBoolean("bankAccount"))){
+        EconomyUser user = EconomyUser.getUser(player);
+        if (user.hasNoBankAccount()){
             player.sendMessage(
                     text("Вам нужно зарегистрировать банковский счёт для использования этой команды", RED)
                             .append(text("\n(Обратитесь в ближайший банк для регистрации)", YELLOW))
@@ -47,7 +47,7 @@ public class put implements CommandExecutor {
             player.sendMessage(text("Нельзя положить меньше 1 "+curAl(), RED));
             return false;
         }
-        int bal = playerData.get().getInt("balance");
+        int bal = user.getBalance();
         int newBal = money+bal;
         if (giveAR(player, money)) {
             player.sendMessage(text().append(text("Ваш счёт успешно пополнен на ", GOLD), text(money, WHITE), text(" "+curAl(), GOLD),

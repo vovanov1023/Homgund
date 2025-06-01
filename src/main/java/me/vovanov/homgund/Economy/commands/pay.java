@@ -1,6 +1,6 @@
 package me.vovanov.homgund.Economy.commands;
 
-import me.vovanov.homgund.Economy.files.playerData;
+import me.vovanov.homgund.Economy.files.EconomyUser;
 import me.vovanov.homgund.discordBot;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
@@ -22,8 +22,8 @@ public class pay implements CommandExecutor {
             return true;
         }
         String senderName = sender.getName();
-        playerData.setup(senderName);
-        if (!playerData.get().getBoolean("bankAccount")){
+        EconomyUser senderUser = EconomyUser.getUser(player);
+        if (senderUser.hasNoBankAccount()) {
             sender.sendMessage(
                     text("Вам нужно зарегистрировать банковский счёт для использования этой команды", RED)
                             .append(text("\n(Обратитесь в ближайший банк для регистрации)", YELLOW))
@@ -42,7 +42,7 @@ public class pay implements CommandExecutor {
             sender.sendMessage(text("Значение не должно быть словом/дробным числом", RED));
             return false;
         }
-        if (amount < 1){
+        if (amount < 1) {
             sender.sendMessage(text("Нельзя отправить меньше 1 "+curAl(), RED));
             return true;
         }
@@ -52,42 +52,45 @@ public class pay implements CommandExecutor {
             sender.sendMessage(text("Нельзя отправлять средства самому себе", RED));
             return true;
         }
-        if (!playerData.setup(getterName)) {
+
+        OfflinePlayer getter = PLUGIN.getServer().getOfflinePlayer(getterName);
+        EconomyUser getterUser = EconomyUser.getUser(getter);
+
+        if (getterUser == null) {
             sender.sendMessage(text("Такого игрока не существует", RED));
             return false;
         }
 
-        if (!playerData.get().getBoolean("bankAccount")) {
+        if (getterUser.hasNoBankAccount()) {
             sender.sendMessage(text("У получателя нет банковского счёта", RED));
             return true;
         }
 
-        playerData.setup(senderName);
-        int bal = playerData.get().getInt("balance");
+        int bal = senderUser.getBalance();
         int newBal = bal - amount;
         if (newBal < 0) {
             sender.sendMessage(text("Недостаточно средств", RED).append(text("\n(На счету " + bal + " "+curAl()+")", YELLOW)));
             return true;
         }
 
-        playerData.get().set("balance", newBal);
-        playerData.save();
+        senderUser.removeFromBalance(amount);
 
-        playerData.setup(getterName);
-        int getterBal = playerData.get().getInt("balance");
+        int getterBal = getterUser.getBalance();
         int newGetterBal = getterBal + amount;
 
-        playerData.get().set("balance", newGetterBal);
-        playerData.save();
+        getterUser.addToBalance(amount);
 
-        OfflinePlayer getter = PLUGIN.getServer().getOfflinePlayer(getterName);
         sender.sendMessage(text().append(text("Успешно отправлено ", GREEN), text(amount +" ", WHITE), text(curAl() + " игроку ", GREEN),
                 text(getterName, WHITE), text("\nВаш текущий баланс: ", GOLD), text(newBal, WHITE)).build());
+
         if (getter.getPlayer() != null)
-            getter.getPlayer().sendMessage(text().append(text(senderName, WHITE), text(" отправил вам ", GREEN), text(amount +" ", WHITE), text(curAl(), GREEN),
-                    text("\nВаш текущий баланс: ", GOLD), text(newGetterBal, WHITE)).build());
+            getter.getPlayer().sendMessage(text().append(text(senderName, WHITE), text(" отправил вам ", GREEN), text(amount +" ", WHITE),
+                    text(curAl(), GREEN), text("\nВаш текущий баланс: ", GOLD), text(newGetterBal, WHITE)).build());
+
         discordBot.sendDirect(senderName+" отправил вам "+amount+" "+curAl()+"\nВаш текущий баланс: "+newGetterBal+" "+curAl(), getter);
+
         discordBot.sendDirect("Вы отправили "+getterName+" "+amount+" "+curAl()+"\nВаш текущий баланс: "+newBal+" "+curAl(), player);
+
         discordBot.logEconomy(senderName+" отправил "+amount+" "+curAl()+" "+getterName+
                 "\nТекущий баланс получателя: "+newGetterBal+
                 "\nТекущий баланс отправителя: "+newBal);

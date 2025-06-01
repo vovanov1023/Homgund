@@ -2,7 +2,7 @@ package me.vovanov.homgund.Economy.commands;
 
 import me.vovanov.homgund.Economy.files.ATMOperations;
 import me.vovanov.homgund.discordBot;
-import me.vovanov.homgund.Economy.files.playerData;
+import me.vovanov.homgund.Economy.files.EconomyUser;
 import org.bukkit.Server;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -23,8 +23,8 @@ public class withdraw implements CommandExecutor {
             return true;
         }
         String nick = player.getName();
-        playerData.setup(nick);
-        if (!(playerData.get().getBoolean("bankAccount"))){
+        EconomyUser user = EconomyUser.getUser(player);
+        if (user.hasNoBankAccount()){
             player.sendMessage(
                     text("Вам нужно зарегистрировать банковский счёт для использования этой команды", RED)
                             .append(text("\n(Обратитесь в ближайший банк для регистрации)", YELLOW))
@@ -49,13 +49,13 @@ public class withdraw implements CommandExecutor {
             player.sendMessage(text("Нельзя вывести меньше 1 "+curAl(), RED));
             return false;
         }
-        int bal = playerData.get().getInt("balance");
+        int bal = user.getBalance();
         int newBal = bal - money;
         if (newBal < 0) {
             player.sendMessage(text("Недостаточно средств", RED).append(text("\n(На счету " + bal + " "+curAl()+")", YELLOW)));
             return false;
         }
-        if (money > 6400){
+        if (money > 6400) {
             player.sendMessage(text("Нельзя вывести больше 6400 "+curAl(), RED));
             return false;
         }
@@ -65,8 +65,7 @@ public class withdraw implements CommandExecutor {
 
         player.sendMessage(text().append(text("Со счёта успешно снято ", BLUE), text(money, WHITE), text(" "+curAl(), BLUE),
                 text("\nВаш текущий баланс: ", GOLD), text(newBal, WHITE)).build());
-        playerData.get().set("balance", newBal);
-        playerData.save();
+        user.removeFromBalance(money);
         discordBot.logEconomy(nick + " вывел со счёта " + money + " "+curAl()+"\nЕго текущий баланс: " + newBal+" "+curAl());
         discordBot.sendDirect("Вы сняли "+money+" "+curAl()+" со своего счёта\nВаш текущий баланс: "+newBal+" "+curAl(), player);
         return true;

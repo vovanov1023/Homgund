@@ -2,8 +2,9 @@ package me.vovanov.homgund.Economy.commands;
 
 import me.vovanov.homgund.Economy.files.creditsHandler;
 import me.vovanov.homgund.discordBot;
-import me.vovanov.homgund.Economy.files.playerData;
+import me.vovanov.homgund.Economy.files.EconomyUser;
 import net.kyori.adventure.text.TextComponent;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -43,27 +44,43 @@ public class bank implements CommandExecutor {
             creditsHandler.getDebtorsList(sender);
             return true;
         }
+
         String getterName = args.length >= 2 ? args[1].replace(".", "") : null;
-        if (!(playerData.setup(getterName))){
+        if (getterName == null) {
+            sender.sendMessage(text("Введите никнейм", RED));
+            return true;
+        }
+        OfflinePlayer offlineGetter = PLUGIN.getServer().getOfflinePlayer(getterName);
+        EconomyUser user = EconomyUser.getUser(offlineGetter);
+
+        if (user == null) {
             sender.sendMessage(text("Этого игрока не существует", RED));
             return false;
         }
-        Player getter = PLUGIN.getServer().getPlayer(getterName);
-        boolean isGetterOffline = getter == null;
-        String senderName = sender.getName();
-        if (args[0].equalsIgnoreCase("create")){
-            if (isGetterOffline) {
-                sender.sendMessage(text("Игрок должен быть онлайн", RED));
-                return false;
-            }
 
-            if (playerData.get().getBoolean("bankAccount")) {
+        if (args[0].equalsIgnoreCase("credits")) {
+            creditsHandler.creditsList(getterName, sender);
+            return true;
+        }
+
+        Player getter;
+        boolean isGetterOnline = offlineGetter.isConnected();
+        if (isGetterOnline) {
+            getter = (Player) offlineGetter;
+        } else {
+            sender.sendMessage(text("Игрок должен быть онлайн", RED));
+            return true;
+        }
+        String senderName = sender.getName();
+
+        if (args[0].equalsIgnoreCase("create")){
+
+            if (!user.hasNoBankAccount()) {
                 sender.sendMessage(text().append(text("У ", RED), text(getterName, WHITE), text(" уже есть банковский счёт", RED)).build());
                 return false;
             }
 
-            playerData.get().set("bankAccount", true);
-            playerData.save();
+            user.setBankAccount(true);
             sender.sendMessage(text().append(text("Счёт для ", GOLD), text(getterName, WHITE), text(" был создан успешно", GOLD)).build());
             TextComponent message = text().append(text(senderName, WHITE), text(" создал вам банковский счёт!", GOLD)).build();
             getter.sendMessage(message);
@@ -73,13 +90,8 @@ public class bank implements CommandExecutor {
 
         }
         if (args[0].equals("credit")){
-            if (!playerData.get().getBoolean("bankAccount")) {
+            if (user.hasNoBankAccount()) {
                 sender.sendMessage(text().append(text("У ", RED), text(getterName, WHITE), text(" нет банковского счёта", RED)).build());
-                return false;
-            }
-
-            if (isGetterOffline) {
-                sender.sendMessage(text("Игрок должен быть онлайн", RED));
                 return false;
             }
 
@@ -105,7 +117,11 @@ public class bank implements CommandExecutor {
                     sender.sendMessage(text("Значение не должно быть словом/дробным числом", RED));
                     return false;
                 }
-                if (!(giveAR(sender, quantity))){
+                if (!(sender instanceof Player player)) {
+                    sender.sendMessage(text("Эта команда доступна лишь игрокам"));
+                    return true;
+                }
+                if (!(giveAR(player, quantity, getter))) {
                     return false;
                 }
                 int credit = ceil(quantity+(((float) quantity/100)*percent));
@@ -118,15 +134,19 @@ public class bank implements CommandExecutor {
                 credits.add(credit+","+time);
                 creditsHandler.getCreditsConf().set("credits."+ getterName, credits);
                 creditsHandler.save();
+
                 sender.sendMessage(text().append(text("Успешно выдан кредит ", GOLD), text(getterName, WHITE), text(" в размере ", GOLD),
                         text(quantity + " ", WHITE), text(curAl(), GOLD), text(" под "), text(percent, WHITE),
                         text(" процента(ов).\nПериод выплаты: ", GOLD), text(time, WHITE), text(" дней", GOLD)
                 ).build());
+
                 getter.sendMessage(text().append(text(senderName, WHITE), text(" выдал вам кредит в размере ", GOLD),
                         text(quantity + " ", WHITE), text(curAl(), GOLD), text(" под "), text(percent, WHITE),
                         text(" процента(ов).\nПериод выплаты: ", GOLD), text(time, WHITE), text(" дней", GOLD)
                 ).build());
+
                 discordBot.logEconomy(senderName+" выдал кредит "+ getterName +" в размере "+quantity+" "+curAl()+" под "+percent+" процента(ов).\nПериод выплаты: "+time+ " дней");
+
                 sendDirect(senderName+" выдал вам кредит "+ getterName +" в размере "+quantity+" "+curAl()+" под "+percent+" процента(ов).\nПериод выплаты: "+time+ " дней", getter);
             } else {
                 sender.sendMessage(text("Недостаточно аргументов\n", RED).append(text(
@@ -134,15 +154,7 @@ public class bank implements CommandExecutor {
                 return false;
             }
         }
-        if (args[0].equalsIgnoreCase("credits")) {
-            creditsHandler.creditsList(getterName, sender);
-            return true;
-        }
-        if (args[0].equalsIgnoreCase("paycredit")){
-            if (isGetterOffline) {
-                sender.sendMessage(text("Игрок должен быть онлайн", RED));
-                return false;
-            }
+        if (args[0].equalsIgnoreCase("paycredit")) {
             try {
                 if (args.length >= 4) {
                     creditsHandler.pay(Integer.parseInt(args[2]), getter, sender, Integer.parseInt(args[3]));

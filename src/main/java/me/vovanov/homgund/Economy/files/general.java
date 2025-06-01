@@ -41,21 +41,24 @@ public class general {
         return alias == null ? "АР" : alias;
     }
 
-    public static Boolean giveAR(CommandSender sender, int quantity){
-        if (!(sender instanceof Player player)) return false;
+    public static Boolean giveAR(Player moneyGetter, int quantity) {
+        return giveAR(moneyGetter, quantity, moneyGetter);
+    }
+
+    public static Boolean giveAR(Player moneyGetter, int quantity, Player moneySender) {
         Material currencyMat = Material.matchMaterial(curIt());
         int totalAR = 0;
-        for (ItemStack item : player.getInventory().getContents()) {
+        for (ItemStack item : moneySender.getInventory().getContents()) {
             if (item != null && item.getType() == currencyMat) {
                 totalAR += item.getAmount();
             }
         }
         if (totalAR < quantity) {
-            player.sendMessage(text("Недостаточно средств", RED).append(text("\n(В инвентаре " + totalAR + " "+curAl()+")", YELLOW)));
+            moneySender.sendMessage(text("Недостаточно средств", RED).append(text("\n(В инвентаре " + totalAR + " "+curAl()+")", YELLOW)));
             return false;
         }
         int remaining = quantity;
-        for (ItemStack item : player.getInventory().getContents()) {
+        for (ItemStack item : moneySender.getInventory().getContents()) {
             if (item != null && item.getType() == currencyMat) {
                 int amountInStack = item.getAmount();
 
@@ -70,9 +73,8 @@ public class general {
                 if (remaining == 0) break;
             }
         }
-
-        playerData.get().set("balance", quantity + playerData.get().getInt("balance"));
-        playerData.save();
+        EconomyUser user = EconomyUser.getUser(moneyGetter);
+        user.addToBalance(quantity);
         return true;
 
     }

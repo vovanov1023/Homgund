@@ -1,6 +1,7 @@
 package me.vovanov.homgund.Economy.commands;
 
-import me.vovanov.homgund.Economy.files.playerData;
+import me.vovanov.homgund.Economy.files.EconomyUser;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -17,9 +18,9 @@ public class balance implements CommandExecutor {
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String s, String[] args) {
         if (sender instanceof Player player) {
-            String nick = player.getName();
-            playerData.setup(nick);
-            if (!(playerData.get().getBoolean("bankAccount"))){
+            EconomyUser user = EconomyUser.getUser(player);
+            if (user == null) return false;
+            if (user.hasNoBankAccount()) {
                 player.sendMessage(
                         text("Вам нужно зарегистрировать банковский счёт для использования этой команды", RED)
                         .append(text("\n(Обратитесь в ближайший банк для регистрации)", YELLOW))
@@ -27,28 +28,30 @@ public class balance implements CommandExecutor {
                 return false;
             }
 
-            if (args.length == 0) {
-                player.sendMessage(text("Ваш текущий баланс: " + playerData.get().getInt("balance") + " АР", YELLOW));
-                return true;
-            } else if (args[0].equalsIgnoreCase("help")) {
-                player.sendMessage(text("Показывает текущий баланс на счету", YELLOW));
-                return false;
-            }
+            player.sendMessage(text("Ваш текущий баланс: " + user.getBalance() + " АР", YELLOW));
+            return true;
+        }
+
+        if (args.length < 3) {
+            sender.sendMessage(text("Недостаточно аргументов", RED));
             return true;
         }
         if (args[0].equalsIgnoreCase("give")) {
-            String plr = args[1];
-            double money = Double.parseDouble(args[2]);
-            if (playerData.setup(plr)) {
-                PLUGIN.getLogger().info("Баланс " + plr + " пополнен на " + money);
-                playerData.get().set("balance", money + playerData.get().getInt("balance"));
-                playerData.save();
+            String name = args[1];
+            OfflinePlayer player = PLUGIN.getServer().getOfflinePlayer(name);
+            EconomyUser user = EconomyUser.getUser(player);
+            if (user == null) {
+                sender.sendMessage(text("Этого игрока не существует", RED));
                 return true;
-            } else {
-                PLUGIN.getLogger().info("Этого игрока не существует");
-                return false;
             }
+
+            int money = Integer.parseInt(args[2]);
+            user.addToBalance(money);
+            int newBal = user.getBalance()+money;
+            PLUGIN.getLogger().info("Баланс " + name + " пополнен на " + money+"\nТекущий баланс: "+newBal);
+            return true;
         }
-        return false;
+
+        return true;
     }
 }
