@@ -26,7 +26,7 @@ public class hgreload implements CommandExecutor {
         }
         catch (Exception e) {
             PLUGIN.getLogger().warning("Что-то пошло не так!\nВозможно, введённые в файл конфигурации токен бота и айди канала недействительны");
-            e.printStackTrace();
+            PLUGIN.getLogger().warning(e.getMessage());
         }
     }
 }

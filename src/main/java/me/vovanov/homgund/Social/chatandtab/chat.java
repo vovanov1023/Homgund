@@ -75,6 +75,7 @@ public class chat implements Listener {
             event.viewers().clear();
             for (UUID checkedPlayerUUID : VanishAPI.getInvisiblePlayers()) {
                 Player checkedPlayer = PLUGIN.getServer().getPlayer(checkedPlayerUUID);
+                if (checkedPlayer == null) continue;
                 event.viewers().add(checkedPlayer);
             }
             hideFromIgnoringPlayers(event, sender);

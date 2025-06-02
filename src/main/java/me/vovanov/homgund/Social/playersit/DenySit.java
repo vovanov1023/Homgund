@@ -54,16 +54,22 @@ public class DenySit implements CommandExecutor, Listener {
 
     public static void newFile() {
         try {
-            if(!file.exists()) file.createNewFile();
+            if (file.createNewFile()) PLUGIN.getLogger().info("Создан файл хранения для запрета сидения");
             fileContents = YamlConfiguration.loadConfiguration(file);
             denySit = fileContents.getStringList("list");
-        } catch (IOException e) {e.printStackTrace();}
+        } catch (IOException e) {
+            PLUGIN.getLogger().severe("Произошла ошибка во время создания файла хранения для запрета сидения: "
+                    +e.getMessage() + "\nПричина: " + e.getCause());
+        }
     }
 
     public static void save() {
         try {
             fileContents.set("list", denySit);
             fileContents.save(file);
-        } catch (IOException e) {e.printStackTrace();}
+        } catch (IOException e) {
+            PLUGIN.getLogger().severe("Произошла ошибка во время сохранения файла хранения для для запрета сидения: "
+                    +e.getMessage() + "\nПричина: " + e.getCause());
+        }
     }
 }

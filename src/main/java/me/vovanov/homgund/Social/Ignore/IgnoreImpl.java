@@ -19,7 +19,7 @@ public class IgnoreImpl {
 
     public static void newFile() {
         try {
-            if(!file.exists()) file.createNewFile();
+            if (file.createNewFile()) PLUGIN.getLogger().info("Создан файл хранения для системы игнорирования");
             fileContents = YamlConfiguration.loadConfiguration(file);
 
             ignoredPlayers = fileContents.getConfigurationSection("ignoredPlayers") != null ?
@@ -30,7 +30,10 @@ public class IgnoreImpl {
                     fileContents.getConfigurationSection("ignoringPlayers") :
                     fileContents.createSection("ignoringPlayers");
 
-        } catch (IOException e) {e.printStackTrace();}
+        } catch (IOException e) {
+            PLUGIN.getLogger().severe("Произошла ошибка во время создания файла хранения для системы игнорирования: "
+                    +e.getMessage() + "\nПричина: " + e.getCause());
+        }
     }
 
     public static void save() {
@@ -38,7 +41,10 @@ public class IgnoreImpl {
             fileContents.set("ignoredPlayers", ignoredPlayers);
             fileContents.set("ignoringPlayers", ignoringPlayers);
             fileContents.save(file);
-        } catch (IOException e) {e.printStackTrace();}
+        } catch (IOException e) {
+            PLUGIN.getLogger().severe("Произошла ошибка во время сохранения файла хранения для системы игнорирования: "
+                    +e.getMessage() + "\nПричина: " + e.getCause());
+        }
     }
 
     /**
