@@ -121,7 +121,7 @@ public class bank implements CommandExecutor {
                     sender.sendMessage(text("Эта команда доступна лишь игрокам"));
                     return true;
                 }
-                if (!(giveAR(player, quantity, getter))) {
+                if (!(giveAR(getter, quantity, player))) {
                     return false;
                 }
                 int credit = ceil(quantity+(((float) quantity/100)*percent));
