@@ -4,7 +4,7 @@ import net.kyori.adventure.text.TextComponent;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.*;
 import org.bukkit.util.RayTraceResult;
 
 import static me.vovanov.homgund.Homgund.PLUGIN;
@@ -13,7 +13,9 @@ import static me.vovanov.homgund.Social.formattedNicknameGetter.getFormattedName
 public class nicknameOnClick implements Listener {
     @EventHandler
     public void onPlayerRightClick(PlayerInteractEvent event) {
-        if (!event.getAction().toString().contains("RIGHT_CLICK")) return;
+        if (!(event.getAction().isRightClick())) return;
+        if (event.getPlayer().getInventory().getItemInMainHand().isEmpty()) return;
+        if (event.getClickedBlock() != null && event.getClickedBlock().isSolid()) return;
         Player player = event.getPlayer();
 
         int maxDistance = PLUGIN.getConfig().getInt("max-nametag-distance");
