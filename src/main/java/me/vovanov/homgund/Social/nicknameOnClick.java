@@ -1,6 +1,8 @@
 package me.vovanov.homgund.Social;
 
 import net.kyori.adventure.text.TextComponent;
+import org.bukkit.FluidCollisionMode;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -15,18 +17,22 @@ public class nicknameOnClick implements Listener {
     @EventHandler
     public void onPlayerRightClick(PlayerInteractEvent event) {
         if (!(event.getAction().isRightClick())) return;
-        if (event.getPlayer().getInventory().getItemInMainHand().isEmpty()) return;
-        if (event.getClickedBlock() != null && event.getClickedBlock().isSolid()) return;
         Player player = event.getPlayer();
 
         int maxDistance = PLUGIN.getConfig().getInt("max-nametag-distance");
-        RayTraceResult result = player.getWorld().rayTraceEntities(
+        RayTraceResult result = player.getWorld().rayTrace(
                 player.getEyeLocation(),
                 player.getLocation().getDirection(),
                 maxDistance,
+                FluidCollisionMode.NEVER,
+                false,
+                0,
                 entity -> entity instanceof Player && !entity.equals(player)
         );
-        if (result != null && result.getHitEntity() instanceof Player targetPlayer) sendActionBar(player, targetPlayer);
+
+        if (result == null) return;
+        Entity hitEntity = result.getHitEntity();
+        if (hitEntity instanceof Player targetPlayer) sendActionBar(player, targetPlayer);
 
     }
 
