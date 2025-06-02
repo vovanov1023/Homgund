@@ -10,3 +10,4 @@ enable-end: false
 enable-nether: true
 
 near-radius: 65.0
+max-nametag-distance: 50
