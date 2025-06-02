@@ -45,12 +45,12 @@ public class EconomyUser {
 
     public void addToBalance(int toAdd) {
         this.balance += toAdd;
-        saveData("balance");
+        saveData("balance", this.balance);
     }
 
     public void removeFromBalance(int toRemove) {
         this.balance -= toRemove;
-        saveData("balance");
+        saveData("balance", this.balance);
     }
 
     public boolean hasNoBankAccount() {
@@ -59,15 +59,15 @@ public class EconomyUser {
 
     public void setBankAccount(boolean toSet) {
         this.bankAccount = toSet;
-        saveData("bankAccount");
+        saveData("bankAccount", toSet);
     }
 
     public OfflinePlayer getPlayer() {
         return this.player;
     }
 
-    private void saveData(String data) {
-        this.playerData.set(data, this.balance);
+    private void saveData(String data, Object value) {
+        this.playerData.set(data, value);
         try {
             this.playerData.save(this.playerDataFile);
         } catch (IOException e) {
