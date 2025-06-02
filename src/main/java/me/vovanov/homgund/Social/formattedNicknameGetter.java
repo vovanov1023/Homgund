@@ -9,27 +9,30 @@ import net.luckperms.api.cacheddata.CachedMetaData;
 import net.luckperms.api.model.user.User;
 import org.bukkit.entity.Player;
 
-import java.util.Objects;
-
 import static me.vovanov.homgund.Homgund.*;
 import static me.vovanov.homgund.Social.playerDisguise.isInMask;
 import static net.kyori.adventure.text.Component.text;
 
 public class formattedNicknameGetter {
 
-    static CachedMetaData getPlayerMetaData(Player player) {
+    private static CachedMetaData getPlayerMetaData(Player player) {
         User user = LuckPermsAPI.getUserManager().getUser(player.getUniqueId());
-        CachedDataManager cachedData = Objects.requireNonNull(user).getCachedData();
+        if (user == null) return null;
+        CachedDataManager cachedData = user.getCachedData();
         return cachedData.getMetaData();
     }
 
-    static TextComponent getPrefix(Player player){
-        String prefix = getPlayerMetaData(player).getPrefix();
+    private static TextComponent getPrefix(Player player) {
+        CachedMetaData data = getPlayerMetaData(player);
+        if (data == null) return text("");
+        String prefix = data.getPrefix();
         return prefix != null ? colorize(prefix) : text("");
     }
 
-    static TextComponent getSuffix(Player player){
-        String suffix = getPlayerMetaData(player).getSuffix();
+    private static TextComponent getSuffix(Player player) {
+        CachedMetaData data = getPlayerMetaData(player);
+        if (data == null) return text("");
+        String suffix = data.getSuffix();
         return suffix != null ? colorize(suffix) : text("");
     }
 
@@ -50,7 +53,7 @@ public class formattedNicknameGetter {
         return formattedName;
     }
 
-    static TextComponent colorize(String string){
+    private static TextComponent colorize(String string){
         return LegacyComponentSerializer.legacyAmpersand().deserialize(string);
     }
 }
