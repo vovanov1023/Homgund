@@ -134,7 +134,7 @@ public class creditsHandler {
             if (credits.isEmpty()) {
                 creditsConf.set("credits." + getterName, null);
             } else {
-                getCreditsConf().set("credits." + getterName, credits);
+                creditsConf.set("credits." + getterName, credits);
             }
             save();
         } catch (IndexOutOfBoundsException e) {
@@ -160,17 +160,16 @@ public class creditsHandler {
             for (String credit : playerCreditsList) {
                 String[] creditValues = credit.split(",");
                 String amountRemaining = creditValues[0];
-                int daysRemaining = Integer.parseInt(creditValues[1]);
-                if (daysRemaining - 1 >= 0) {
-                    creditValues[1] = String.valueOf(daysRemaining - 1);
-                    String newCreditValues = amountRemaining + "," + daysRemaining;
+                int newDaysRemaining = Integer.parseInt(creditValues[1])-1;
+                if (newDaysRemaining >= 0) {
+                    String newCreditValues = amountRemaining + "," + newDaysRemaining;
                     playerCreditsList.set(creditIndex, newCreditValues);
                 } else {
                     sendDirect("У вас задолженность "+amountRemaining+" "+curAl()+" по одному из ваших кредитов! Скорее обратитесь в банк для погашения.", PLUGIN.getServer().getOfflinePlayer(playerName));
                 }
                 creditIndex += 1;
             }
-            getCreditsConf().set("credits."+playerName, playerCreditsList);
+            creditsConf.set("credits."+playerName, playerCreditsList);
             creditIndex = 0;
         }
         save();
