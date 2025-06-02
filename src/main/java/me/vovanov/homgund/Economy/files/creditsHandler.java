@@ -28,14 +28,22 @@ public class creditsHandler {
     }
 
     public static void save(){
-        try {creditsConf.save(creditsFile);} catch (IOException e) {e.printStackTrace();}
+        try {creditsConf.save(creditsFile);} catch (IOException e) {
+            PLUGIN.getLogger().severe("Произошла ошибка во время сохранения файла для хранения кредитов: "
+                    + e.getMessage() + "\nПричина: " + e.getCause());
+        }
     }
 
     public static void newFile(){
         File credits = new File(dataFolder, "credits.yml");
-        try {credits.createNewFile();} catch (IOException e) {e.printStackTrace();}
+        try {
+           if (credits.createNewFile())  PLUGIN.getLogger().info("Файл для хранения кредитов создан");
+        } catch (IOException e) {
+            PLUGIN.getLogger().severe("Произошла ошибка во время создания файла для хранения кредитов: "
+                    + e.getMessage() + "\nПричина: " + e.getCause());
+        }
         creditsConf.addDefault("count", 0);
-        creditsConf.options().copyDefaults();
+        creditsConf.options().copyDefaults(true);
         save();
     }
 
@@ -62,6 +70,12 @@ public class creditsHandler {
 
     public static void creditsList(String nick, CommandSender player){
         ConfigurationSection confSec = creditsConf.getConfigurationSection("credits");
+        if (confSec == null) {
+            creditsConf.createSection("credits");
+            player.sendMessage(text("Произошла внутренняя ошибка, попробуйте ещё раз!", RED));
+            save();
+            return;
+        }
         Set<String> keys = confSec.getKeys(false);
         if (!keys.contains(nick)) {
             player.sendMessage(text("У этого игрока нет кредитов", RED));
@@ -78,6 +92,12 @@ public class creditsHandler {
 
     public static void pay(int index, Player getter, CommandSender sender, int toPay){
         ConfigurationSection confSec = creditsConf.getConfigurationSection("credits");
+        if (confSec == null) {
+            creditsConf.createSection("credits");
+            sender.sendMessage(text("Произошла внутренняя ошибка, попробуйте ещё раз!", RED));
+            save();
+            return;
+        }
         String getterName = getter.getName();
         String senderName = sender.getName();
         Set<String> keys = confSec.getKeys(false);
@@ -124,6 +144,12 @@ public class creditsHandler {
 
     public static void removeDay(){
         ConfigurationSection playersList = creditsConf.getConfigurationSection("credits");
+        if (playersList == null) {
+            creditsConf.createSection("credits");
+            PLUGIN.getLogger().warning("В файле с кредитами нет секции для кредитов. Оставшиеся для оплаты кредита дни не будут вычтены");
+            save();
+            return;
+        }
         Set<String> keys = playersList.getKeys(false);
         if (keys.isEmpty()) {
             return;

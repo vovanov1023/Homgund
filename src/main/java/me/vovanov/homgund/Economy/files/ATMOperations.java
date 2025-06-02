@@ -31,7 +31,12 @@ public class ATMOperations implements Listener {
     private static FileConfiguration ATMsConfig;
 
     public static void newFile(){
-        try {ATMsFile.createNewFile();} catch (IOException e) {e.printStackTrace();}
+        try {
+            if (ATMsFile.createNewFile()) PLUGIN.getLogger().info("Создан файл хранения банкоматов");
+        } catch (IOException e) {
+            PLUGIN.getLogger().severe("Произошла ошибка во время создания файла для хранения банкоматов: "
+                    +e.getMessage() + "\nПричина: " + e.getCause());
+        }
         ATMsConfig = YamlConfiguration.loadConfiguration(ATMsFile);
     }
 
@@ -120,9 +125,11 @@ public class ATMOperations implements Listener {
             double x = Double.parseDouble(coords[0]);
             double y = Double.parseDouble(coords[1]);
             double z = Double.parseDouble(coords[2]);
-            if (ATMsConfig.get(key).toString().equals("world")) {
+            String worldNameString = ATMsConfig.getString(key);
+            if (worldNameString == null) continue;
+            if (worldNameString.equals("world")) {
                 worldName = text("Верхний мир", GREEN);
-            } else if (ATMsConfig.get(key).toString().equals("world_nether")) {
+            } else if (worldNameString.equals("world_nether")) {
                 worldName = text("Незер", RED);
             } else {
                 worldName = text("Край", YELLOW);
@@ -144,31 +151,34 @@ public class ATMOperations implements Listener {
         Location location;
         World world;
         int minDistance = PLUGIN.getConfig().getInt("atm-radius");
-        try {
-            for (String key : keys) {
-                coords = key.split(",");
-                double x = Double.parseDouble(coords[0]);
-                double y = Double.parseDouble(coords[1]);
-                double z = Double.parseDouble(coords[2]);
-                String worldName = ATMsConfig.get(key).toString();
-                world = Bukkit.getServer().getWorld(worldName);
-                location = new Location(world, x, y, z);
-                if (!((playerLocation.getWorld()).equals(world))) {
-                    continue;
-                }
-                if ((playerLocation.distanceSquared(location)) < minDistance*minDistance) {
-                    return true;
-                }
+
+        for (String key : keys) {
+            coords = key.split(",");
+            int x = Integer.parseInt(coords[0]);
+            int y = Integer.parseInt(coords[1]);
+            int z = Integer.parseInt(coords[2]);
+            String worldName = ATMsConfig.getString(key);
+            if (worldName == null) continue;
+            world = Bukkit.getServer().getWorld(worldName);
+            if (world == null) continue;
+            location = new Location(world, x, y, z);
+            if (!((playerLocation.getWorld()).equals(world))) {
+                continue;
             }
-            player.sendMessage(text("Для использования этой команды вы должны подойти к банкомату", RED));
-            return false;
-        } catch (NullPointerException ignore) {}
+            if ((playerLocation.distanceSquared(location)) < minDistance*minDistance) {
+                return true;
+            }
+        }
+
         player.sendMessage(text("Для использования этой команды вы должны подойти к банкомату", RED));
         return false;
     }
 
     public static void save(){
-        try {ATMsConfig.save(ATMsFile);} catch (IOException e){e.printStackTrace();}
+        try {ATMsConfig.save(ATMsFile);} catch (IOException e) {
+            PLUGIN.getLogger().severe("Произошла ошибка во время сохранения файла для хранения банкоматов: "
+                    +e.getMessage() + "\nПричина: " + e.getCause());
+        }
     }
 
     @EventHandler

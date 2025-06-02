@@ -79,26 +79,26 @@ public class EconomyUser {
 
     public static void newFile(String nick) {
         File playerDataFile = new File(playerDataFolder, nick + ".yml");
-
-        if (!playerDataFile.exists()) {
-            try {
-                playerDataFile.createNewFile();
-                FileConfiguration playerData = YamlConfiguration.loadConfiguration(playerDataFile);
-
-                playerData.addDefault("bankAccount", false);
-                playerData.addDefault("balance", 0);
-                playerData.options().copyDefaults(true);
-
-                playerData.save(playerDataFile);
-            } catch (IOException e) {
-                PLUGIN.getLogger().severe("Произошла ошибка во время создания файла данных " + nick);
-                e.printStackTrace();
-            }
+        try {
+            createNewDataFile(playerDataFile);
+        } catch (IOException e) {
+            PLUGIN.getLogger().severe("Произошла ошибка во время создания файла данных "
+                    +nick+": " + e.getMessage() + "\nПричина: " + e.getCause());
         }
     }
 
-    public static void newFolder(){
-        File playerDataFolder = new File(dataFolder, "playerData");
-        playerDataFolder.mkdir();
+    private static void createNewDataFile(File playerDataFile) throws IOException {
+        if (playerDataFile.createNewFile()) return;
+        FileConfiguration playerData = YamlConfiguration.loadConfiguration(playerDataFile);
+
+        playerData.addDefault("bankAccount", false);
+        playerData.addDefault("balance", 0);
+        playerData.options().copyDefaults(true);
+
+        playerData.save(playerDataFile);
+    }
+
+    public static void createPlayerDataFolder() {
+        if (playerDataFolder.mkdir()) PLUGIN.getLogger().info("Папка для данных создана");
     }
 }
