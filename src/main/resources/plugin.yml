@@ -5,7 +5,7 @@ api-version: ${minecraftVersion}
 authors: [vovanov]
 description: Крутой плагин :))
 depend: []
-softdepend: ["GSit", "LuckPerms", "SuperVanish"]
+softdepend: ["GSit", "LuckPerms", "SuperVanish", "DiscordSRV"]
 permissions:
   economy.worker:
     description: Позволяет использовать команду /bank
