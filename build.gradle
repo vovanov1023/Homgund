@@ -17,8 +17,6 @@ repositories {
         url = "https://oss.sonatype.org/content/groups/public/"
     }
     maven {url = "https://repo1.maven.org/maven2/net/luckperms/api/"}
-    maven {url = "https://jitpack.io"}
-    maven {url = 'https://nexus.scarsz.me/content/groups/public/'}
 }
 
 dependencies {
@@ -26,8 +24,6 @@ dependencies {
     compileOnly("net.luckperms:api:$LuckPermsApiVersion")
     compileOnly "com.github.LeonMangler:SuperVanish:$SuperVanishApiVersion"
     compileOnly("com.github.Gecolay.GSit:core:$GSitVersion")
-    implementation("net.dv8tion:JDA:$JDAVersion") {exclude module: 'opus-java'}
-    compileOnly "com.discordsrv:discordsrv:$DiscordSRVVersion"
 }
 
 def targetJavaVersion = 21

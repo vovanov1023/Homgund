@@ -1,7 +1,5 @@
 package me.vovanov.homgund;
 
-import me.vovanov.homgund.Economy.commands.*;
-import me.vovanov.homgund.Economy.files.*;
 import me.vovanov.homgund.Social.*;
 import me.vovanov.homgund.Social.Ignore.*;
 import me.vovanov.homgund.Social.commands.*;
@@ -40,13 +38,6 @@ public final class Homgund extends JavaPlugin {
         DenySit.newFile();
         IgnoreImpl.newFile();
 
-        ATMOperations.newFile();
-        EconomyUser.createPlayerDataFolder();
-        creditsHandler.newFile();
-
-        Bukkit.getScheduler().scheduleSyncRepeatingTask(this, creditsHandler::count, 1200L, 1200L);
-        Bukkit.getScheduler().scheduleSyncRepeatingTask(this, ATMOperations::checkATMs, 600L, 600L);
-
         enableLuckPermsIntegration();
         enableSuperVanishIntegration();
         enableGSitIntegration();
@@ -68,14 +59,8 @@ public final class Homgund extends JavaPlugin {
         getCommand("try").setExecutor(new tryCommand());
         getCommand("mee").setExecutor(new meCommand());
         getCommand("do").setExecutor(new doCommand());
-        getCommand("balance").setExecutor(new balance());
-        getCommand("withdraw").setExecutor(new withdraw());
-        getCommand("put").setExecutor(new put());
-        getCommand("bank").setExecutor(new bank());
-        getCommand("atm").setExecutor(new atm());
         getCommand("hgreload").setExecutor(new hgreload());
         getCommand("sign").setExecutor(new ItemSigning());
-        getCommand("pay").setExecutor(new pay());
         getCommand("tp").setExecutor(new Teleport());
         getCommand("hat").setExecutor(new HatCommand());
         getCommand("ignore").setExecutor(new IgnoreCommand());
@@ -86,8 +71,8 @@ public final class Homgund extends JavaPlugin {
     private void registerEventListeners() {
         Listener[] listeners = {
                 new GlobalMessages(), new meCommand(), new chat(), new privateMessage(), new nicknameOnClick(),
-                new ATMOperations(), new InvisibleItemFrames(), new BatsDropMembranes(), new DimensionChange(),
-                new HorseMilk(), new discordBot()
+                new InvisibleItemFrames(), new BatsDropMembranes(), new DimensionChange(),
+                new HorseMilk()
         };
         for (Listener i : listeners)
             PLUGIN_MANAGER.registerEvents(i, this);

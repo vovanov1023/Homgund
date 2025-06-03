@@ -21,12 +21,5 @@ public class hgreload implements CommandExecutor {
         config = PLUGIN.getConfig();
         config.options().copyDefaults(true);
         PLUGIN.saveDefaultConfig();
-        try {
-            new discordBot().initialiseBot(config.getString("bot-token"), config.getString("channel-id"));
-        }
-        catch (Exception e) {
-            PLUGIN.getLogger().warning("Что-то пошло не так!\nВозможно, введённые в файл конфигурации токен бота и айди канала недействительны");
-            PLUGIN.getLogger().warning(e.getMessage());
-        }
     }
 }
