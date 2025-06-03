@@ -9,7 +9,6 @@ import org.jetbrains.annotations.NotNull;
 import static me.vovanov.homgund.Homgund.PLUGIN;
 
 public class hgreload implements CommandExecutor {
-    static FileConfiguration config;
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String s, @NotNull String[] args) {
         PLUGIN.reloadConfig();
@@ -18,7 +17,7 @@ public class hgreload implements CommandExecutor {
         return false;
     }
     public static void reload(){
-        config = PLUGIN.getConfig();
+        FileConfiguration config = PLUGIN.getConfig();
         config.options().copyDefaults(true);
         PLUGIN.saveDefaultConfig();
     }
