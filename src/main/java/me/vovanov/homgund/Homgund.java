@@ -23,11 +23,10 @@ import static me.vovanov.homgund.Social.chatandtab.chat.messagesOverHead;
 
 public final class Homgund extends JavaPlugin {
     public static LuckPerms LuckPermsAPI = null;
-    Scoreboard sc;
     public static Team hideNickname;
     public static int vanishedPlayers = 0;
     public static Plugin PLUGIN;
-    public static final PluginManager PLUGIN_MANAGER = Bukkit.getPluginManager();
+    private static final PluginManager PLUGIN_MANAGER = Bukkit.getPluginManager();
     public static boolean IsSvEn = false;
 
     @Override
@@ -57,7 +56,7 @@ public final class Homgund extends JavaPlugin {
     }
 
     private void setupNicknameHide() {
-        sc = Bukkit.getServer().getScoreboardManager().getMainScoreboard();
+        Scoreboard sc = Bukkit.getServer().getScoreboardManager().getMainScoreboard();
         hideNickname = sc.getTeam("hide");
         if (hideNickname == null) hideNickname = sc.registerNewTeam("hide");
         hideNickname.setOption(Team.Option.NAME_TAG_VISIBILITY, Team.OptionStatus.NEVER);
