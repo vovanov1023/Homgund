@@ -1,10 +1,9 @@
 name: Homgund
-version: ${pluginVersion}
+version: $version
 main: me.vovanov.homgund.Homgund
-api-version: ${minecraftVersion}
-authors: [vovanov]
+api-version: $apiVersion
+authors: $authors
 description: Крутой плагин :))
-depend: []
 softdepend: ["GSit", "LuckPerms", "SuperVanish", "DiscordSRV"]
 permissions:
   economy.worker:
