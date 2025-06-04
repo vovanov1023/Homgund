@@ -1,0 +1,21 @@
+[versions]
+minecraft = "1.21"
+bukkit = "1.21.1-R0.1-SNAPSHOT"
+kotlin = "2.1.10"
+luckperms = "5.4"
+supervanish = "6.2.19"
+gsit = "2.3.2"
+jda = "5.5.1"
+discordsrv = "1.29.0"
+
+[libraries]
+paper = { module = "io.papermc.paper:paper-api", version.ref = "bukkit" }
+luckperms = { module = "net.luckperms:api", version.ref = "luckperms" }
+supervanish = { module = "com.github.LeonMangler:SuperVanish", version.ref = "supervanish" }
+gsit = { module = "com.github.Gecolay.GSit:core", version.ref = "gsit" }
+jda = { module = "net.dv8tion:JDA", version.ref = "jda" }
+discordsrv = { module = "com.discordsrv:discordsrv", version.ref = "discordsrv" }
+
+[plugins]
+kotlin = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
+shadow = "com.gradleup.shadow:8.3.5"
