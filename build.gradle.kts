@@ -44,3 +44,29 @@ tasks.withType<JavaCompile> {
     options.encoding = "UTF-8"
     options.release = 21
 }
+
+tasks {
+    assemble {
+        dependsOn(shadowJar)
+    }
+}
+
+tasks.processResources {
+    filteringCharset = Charsets.UTF_8.name()
+
+    val props = mapOf(
+        "version" to version,
+        "description" to project.description,
+
+        "apiVersion" to libs.versions.minecraft.orNull,
+        "authors" to listOf("vovanov")
+    )
+
+    inputs.properties(props)
+
+    filesMatching("plugin.yml") {
+        expand(props)
+    }
+}
+
+description = "Homgund plugin"
